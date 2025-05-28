@@ -5,14 +5,14 @@ from fast_bitrix24 import Bitrix
 from dotenv import load_dotenv
 load_dotenv()
 
-from entity import _Deal, CustomField, TextCustomField, SelectCustomField, Company
+from orm_bitrix24.entity import _Deal, CustomField, TextCustomField, SelectCustomField, Company
 
 
 # Расширяем базовый класс _Deal, добавляя пользовательские поля 
 class Deal(_Deal):
     utm_source = CustomField("UTM_SOURCE")
     delivery_address = TextCustomField("UF_CRM_DELIVERY_ADDRESS")
-    delivery_type22 = SelectCustomField("UF_CRM_DELIVERY_TYPE")
+    delivery_type223 = SelectCustomField("UF_CRM_DELIVERY_TYPE")
 
 
 async def main():
@@ -27,7 +27,7 @@ async def main():
     # Инициализация менеджеров сущностей
     Deal.get_manager(bitrix)
     # Company.get_manager(bitrix)
-     
+    
     # Пример получения всех сделок
     deals = await Deal.objects.get_all()
     print(f"Найдено сделок: {len(deals)}")

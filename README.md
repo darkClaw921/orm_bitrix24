@@ -1,3 +1,6 @@
+![PyPI - Downloads](https://img.shields.io/pypi/dm/orm-bitrix24)
+
+
 # ORM-система для работы с Bitrix24
 
 
@@ -17,7 +20,7 @@
 ## Установка
 
 ```bash
-pip install orm-bitrix24
+uv add orm-bitrix24
 ```
 
 ## Использование

@@ -160,6 +160,17 @@ class DealNoteManager(RelatedManager[DealNote]):
 
 class DealEntityManager(EntityManager['Deal']):
     """Кастомный менеджер сделок для правильной типизации"""
+    
+    async def get_by_id(self, deal_id: Union[str, int]) -> Optional['Deal']:
+        """Получение сделки по ID"""
+        result = await self._bitrix.call(
+            'crm.deal.get',
+            {'id': deal_id}
+        )
+        if result:
+            return self._entity_class(self._bitrix, result)
+        return None
+    
     pass
 
 
@@ -243,17 +254,17 @@ class Deal(BaseEntity):
         cls.objects = manager
         return manager
     
-    @classmethod
-    def add_custom_field(cls, name: str, field: CustomField) -> None:
-        """
-        Добавляет пользовательское поле в класс Deal
+    # @classmethod
+    # def add_custom_field(cls, name: str, field: CustomField) -> None:
+    #     """
+    #     Добавляет пользовательское поле в класс Deal
         
-        Пример:
-        Deal.add_custom_field('utm_source', CustomField("UTM Source"))
-        Deal.add_custom_field('delivery_address', TextCustomField("Адрес доставки"))
-        """
-        setattr(cls, name, field)
-        cls._custom_fields[name] = field
+    #     Пример:
+    #     Deal.add_custom_field('utm_source', CustomField("UTM Source"))
+    #     Deal.add_custom_field('delivery_address', TextCustomField("Адрес доставки"))
+    #     """
+    #     setattr(cls, name, field)
+    #     cls._custom_fields[name] = field
     
     async def save(self) -> 'Deal':
         """Сохранение сделки и связанных данных"""
@@ -264,6 +275,18 @@ class Deal(BaseEntity):
         await self.products.save()
         
         return self
+
+    async def delete(self) -> bool:
+        """Удаление сделки"""
+        if not self.id:
+            raise ValueError("Невозможно удалить несохраненную сделку")
+        
+        result = await self._bitrix.call(
+            'crm.deal.delete',
+            {'id': self.id}
+        )
+        
+        return bool(result)
 
 
 # Пример добавления пользовательских полей
