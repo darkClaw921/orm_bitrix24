@@ -157,6 +157,34 @@ deal.company_id = 5  # Смена компании
 await deal.save()
 ```
 
+
+
+### Перемещение лида в сделку
+для переноса лида в сделку необходимо создать компанию и контакт, если они не существуют. И привязать их к лиду
+
+```python
+from orm_bitrix24.entity import _Lead, Company
+# Инициализация клиента Bitrix24
+webhook = os.environ.get("WEBHOOK")
+if not webhook:
+    print("Необходимо установить переменную окружения WEBHOOK")
+    return
+
+bitrix = Bitrix(webhook)
+
+# Инициализация менеджеров сущностей
+Lead.get_manager(bitrix)
+leads = await Lead.objects.get_all()
+print(f"Найдено лидов: {len(leads)}")
+lead = leads[0]
+
+deal=await lead.move_to_deal(isCreateCompany=True, isCreateContact=False)
+print(deal)
+
+
+```
+
+
 ## Требования
 
 - Python 3.7+

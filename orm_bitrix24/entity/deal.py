@@ -72,10 +72,12 @@ class ProductsManager:
             if not self._deal.id:
                 self._products = []
             else:
-                result = await self._bitrix.call(
+                result = await self._bitrix.get_all(
                     'crm.deal.productrows.get',
                     {'id': self._deal.id}
                 )
+                # print(result)
+                # 1/0
                 self._products = [Product(item) for item in result]
         return self._products or []
     
@@ -193,7 +195,8 @@ class Deal(BaseEntity):
     closed: Optional[bool]
     comments: Optional[str]
     type_id: Optional[str]
-    
+
+    lead_id: Optional[int]
     company_id: Optional[int]
     contact_id: Optional[int]
     assigned_by_id: Optional[int]
@@ -215,6 +218,7 @@ class Deal(BaseEntity):
     type_id = StringField("TYPE_ID")
     
     # Связанные сущности
+    lead_id = IntegerField("LEAD_ID")
     company_id = IntegerField("COMPANY_ID")
     contact_id = IntegerField("CONTACT_ID")
     assigned_by_id = IntegerField("ASSIGNED_BY_ID")

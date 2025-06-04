@@ -4,11 +4,12 @@ from .base import (
     UrlCustomField, EntityManager
 )
 from .deal import Deal as _Deal
+from .lead import Lead as _Lead
 from .company import Company
 from .contact import Contact
 
 __all__ = [
     'BaseEntity', 'StringField', 'IntegerField', 'FloatField', 'DateTimeField', 'BooleanField',
     'RelatedEntityField', 'ListField', 'RelatedManager', 'CustomField', 'TextCustomField', 
-    'SelectCustomField', 'UrlCustomField', 'EntityManager', '_Deal', 'Company', 'Contact'
+    'SelectCustomField', 'UrlCustomField', 'EntityManager', '_Deal', '_Lead', 'Company', 'Contact'
 ] 

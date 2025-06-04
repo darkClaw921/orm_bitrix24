@@ -1,6 +1,7 @@
 import asyncio
 import os
 import inspect
+from pprint import pprint
 from fast_bitrix24 import Bitrix
 from dotenv import load_dotenv
 load_dotenv()
@@ -29,9 +30,32 @@ async def main():
     # Company.get_manager(bitrix)
     
     # Пример получения всех сделок
-    deals = await Deal.objects.get_all()
-    print(f"Найдено сделок: {len(deals)}")
-    deal = deals[0]
+    # deals = await Deal.objects.get_all()
+    deal = await Deal.objects.get_by_id(147)
+    
+
+   # Получение товаров сделки
+    products = await deal.products.get_all()
+    print(f"В сделке {len(products)} товаров")
+
+    
+
+    product = deal.products.add(
+        product_id=5,  # ID товара из каталога Bitrix24
+        price=1000,
+        quantity=10,
+        discount_rate=0.5  # 10% скидка
+    )
+
+    # Изменение параметров товара
+    # product.quantity = 3
+    # product.discount_sum = 500  # Скидка фиксированной суммой
+    await deal.save()
+    # deal.lead_id = 5
+    # await deal.save()
+    # print(f"Найдено сделок: {len(deals)}")
+    # deal = deals[0]
+    1/0
     if deals:
         # Получение первой сделки для демонстрации
         deal = deals[0]

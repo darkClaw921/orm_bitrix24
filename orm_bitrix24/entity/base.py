@@ -284,6 +284,7 @@ class BaseEntity:
                     }
                 )
                 self._dirty_fields.clear()
+                return self.id
         else:  # Создание новой
             result = await self._bitrix.call(
                 f"{self.ENTITY_METHOD}.add",
@@ -291,6 +292,7 @@ class BaseEntity:
             )
             self._data["ID"] = result
             self._dirty_fields.clear()
+            return self.id
     
     @classmethod
     async def get_by_id(cls: Type[T], bitrix: Bitrix, entity_id: Union[str, int]) -> Optional[T]:

@@ -129,6 +129,7 @@ class Deal(BaseEntity):
     type_id: str
     
     # Связанные сущности
+    lead_id: Optional[int]
     company_id: Optional[int]
     contact_id: Optional[int]
     assigned_by_id: Optional[int]
