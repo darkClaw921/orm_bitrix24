@@ -290,6 +290,8 @@ class BaseEntity:
                 f"{self.ENTITY_METHOD}.add",
                 {'fields': self._data}
             )
+            # if result.get('order0000000000'):
+                # result = result['order0000000000']
             self._data["ID"] = result
             self._dirty_fields.clear()
             return self.id

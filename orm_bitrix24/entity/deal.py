@@ -8,6 +8,7 @@ from .base import (
 from .company import Company
 from .contact import Contact
 from .note import Note
+from .activity import ActivityManager
 
 
 class Product:
@@ -236,6 +237,7 @@ class Deal(BaseEntity):
     # Объекты для подсказок типов IDE
     notes: DealNoteManager
     products: ProductsManager
+    activity: ActivityManager
     objects: ClassVar[DealEntityManager]
     
     @property
@@ -248,6 +250,8 @@ class Deal(BaseEntity):
         self.notes = DealNoteManager(bitrix, self, DealNote)
         # Инициализация менеджера товаров
         self.products = ProductsManager(bitrix, self)
+        # Инициализация менеджера активностей
+        self.activity = ActivityManager(bitrix, self)
     
     def __str__(self) -> str:
         return f"Deal: {self.title} (ID: {self.id})"

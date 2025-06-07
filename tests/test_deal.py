@@ -59,7 +59,9 @@ def test_deal(bitrix_client):
 async def test_deal_get(test_deal):
     """Тест получения сделки по ID"""
     # Получаем сделку по ID
+    pprint(test_deal)
     deal_id = test_deal.id
+    # pytest.skip("Необходимо установить переменную окружения WEBHOOK")
     # retrieved_deal = asyncio.run(DealTest.objects.get_by_id(deal_id))
     retrieved_deal = await DealTest.objects.get_by_id(deal_id)
     

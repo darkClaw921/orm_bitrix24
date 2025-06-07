@@ -9,6 +9,7 @@ from .company import Company
 from .contact import Contact
 from .deal import Deal
 from .note import Note
+from .activity import ActivityManager
 
 
 class LeadNote(Note):
@@ -67,6 +68,7 @@ class Lead(BaseEntity):
     contact = RelatedEntityField("CONTACT_ID", Contact)
 
     objects: ClassVar[LeadEntityManager]
+    activity: ActivityManager
 
     @property
     def tags(self) -> List[str]:
@@ -76,6 +78,8 @@ class Lead(BaseEntity):
         super().__init__(bitrix, data)
         # Инициализация менеджера примечаний
         self.notes = LeadNoteManager(bitrix, self, LeadNote)
+        # Инициализация менеджера активностей
+        self.activity = ActivityManager(bitrix, self)
 
     def __str__(self) -> str:
         return f"Lead: {self.title} (ID: {self.id})"
