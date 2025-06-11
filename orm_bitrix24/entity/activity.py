@@ -324,19 +324,27 @@ class ActivityManager(RelatedManager['Activity']):
             return []
         
         logger.debug(f"Получение активностей для {self._entity_type} ID {self._parent_entity.id}")
-        
+        owner_type_mapping = {
+            'DEAL': 2,      # CCrmOwnerType::Deal
+            'LEAD': 1,      # CCrmOwnerType::Lead  
+            'CONTACT': 3,   # CCrmOwnerType::Contact
+            'COMPANY': 4    # CCrmOwnerType::Company
+        }
+
         result = await self._bitrix.get_all(
             'crm.activity.list',
             {
                 'filter': {
-                    'ENTITY_TYPE': self._entity_type,
-                    'ENTITY_ID': self._parent_entity.id
+                    'OWNER_TYPE_ID': owner_type_mapping[self._entity_type],
+                    'OWNER_ID': self._parent_entity.id
                 },
                 'select':['*','COMMUNICATIONS']
             }
         )
-        if result.get('order0000000000'):
-            result = result['order0000000000']
+        if isinstance(result, dict):
+
+            if result.get('order0000000000'):
+                result = result['order0000000000']
         
         activities = [self._activity_class(self._bitrix, item) for item in result]
         logger.debug(f"Найдено {len(activities)} активностей")

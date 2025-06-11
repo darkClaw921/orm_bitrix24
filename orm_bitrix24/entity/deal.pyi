@@ -2,7 +2,9 @@ from typing import List, Dict, Any, Optional, ClassVar, Type, Union, Awaitable, 
 import datetime
 from fast_bitrix24 import Bitrix
 
-from .base import BaseEntity, EntityManager, RelatedManager, CustomField, TextCustomField, SelectCustomField
+from .base import BaseEntity, EntityManager, RelatedManager, CustomField, TextCustomField, SelectCustomField, TimelineCommentManager
+from .activity import ActivityManager
+from .timeline import TimelineManager
 
 T = TypeVar('T', bound=BaseEntity)
 
@@ -143,7 +145,9 @@ class Deal(BaseEntity):
     # Менеджеры
     notes: DealNoteManager
     products: ProductsManager
-    
+    activity: ActivityManager
+    objects: ClassVar[DealEntityManager]
+    timeline: TimelineManager
     # Пользовательские поля добавляются через наследование
     # см. пример в main.py:
     # class Deal(_Deal):
@@ -157,8 +161,6 @@ class Deal(BaseEntity):
     @classmethod
     def get_manager(cls, bitrix: Bitrix) -> EntityManager['Deal']: ...
     
-    @classmethod
-    def add_custom_field(cls, name: str, field: Any) -> None: ...
     
     async def save(self) -> 'Deal': ...
     

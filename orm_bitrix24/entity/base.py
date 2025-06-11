@@ -1,6 +1,7 @@
-from typing import Any, Dict, List, Optional, TypeVar, Generic, Type, Union, Callable, get_type_hints, cast, Generic, overload
+from typing import Any, Dict, List, Optional, TypeVar, Generic, Type, Union, Callable, get_type_hints, cast, Generic, overload, ClassVar
 import datetime
 from fast_bitrix24 import Bitrix
+from loguru import logger
 
 T = TypeVar('T', bound='BaseEntity')
 V = TypeVar('V')  # Тип значения поля
@@ -23,6 +24,9 @@ class Field(Generic[V]):
         return cast(V, instance._data.get(self.field_name))
         
     def __set__(self, instance: 'BaseEntity', value: V) -> None:
+        if value is None and not self.nullable:
+            raise ValueError(f"Поле {self.name} не может быть пустым")
+        
         instance._data[self.field_name] = value
         instance._dirty_fields.add(self.field_name)
 
@@ -242,6 +246,11 @@ class BaseEntity:
     def __init__(self, bitrix: Bitrix, data: Optional[Dict[str, Any]] = None):
         self._bitrix: Bitrix = bitrix
         
+        # Инициализация таймлайна для сущности если она поддерживает его
+        if self.ENTITY_NAME in ['DEAL', 'LEAD', 'CONTACT', 'COMPANY']:
+            from .timeline import TimelineManager
+            self._timeline = TimelineManager(bitrix, self)
+        
         # Проверяем и обрабатываем вложенную структуру данных
         if data and len(data) == 1 and isinstance(next(iter(data.values())), dict):
             # Если есть один ключ и его значение - словарь, извлекаем этот словарь
@@ -306,3 +315,15 @@ class BaseEntity:
         if result:
             return cls(bitrix, result)
         return None 
+
+    @property
+    def timeline(self):
+        """
+        Доступ к таймлайну сущности
+        
+        Returns:
+            TimelineManager: Менеджер таймлайна
+        """
+        if hasattr(self, '_timeline'):
+            return self._timeline
+        raise AttributeError(f"Сущность {self.ENTITY_NAME} не поддерживает таймлайн") 

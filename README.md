@@ -203,6 +203,18 @@ email_activity = await deal.activity.mail(
     from_email="почта@из.битрикса")
 ```
 
+чтобы получить комментарии у связанной сущности необходимо получить сделку и затем сущность например контакт
+```python
+
+await deal.contact
+    
+await deal.contact.timeline.comments.create("Тестовый комментарий через ORM3")
+
+comments = await deal.contact.timeline.comments.get_all()
+logger.info(f"Найдено {len(comments)} комментариев таймлайна")
+for comment in comments:
+    logger.info(f"Комментарий ID {comment.id}: {comment.comment} от {comment.author_id}")
+```        
 ## Требования
 
 - Python 3.12+
