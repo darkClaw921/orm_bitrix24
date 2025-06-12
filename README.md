@@ -16,6 +16,18 @@
 - Поддержка пользовательских полей
 - Работа с товарными позициями сделок
 - Асинхронный подход для лучшей производительности
+- Поддержка комментариев в таймлайне
+- для поддержки анотации в IDE используйте конструкцию вида:
+```python
+from orm_bitrix24.entity import _Deal, TextCustomField
+class Deal(_Deal):
+    new_string_user = TextCustomField("UF_CRM_1748463696180")
+deal:Deal=await Deal.objects.get_by_id(123)
+deal.new_string_user="test_source"
+await deal.save()
+```
+
+
 
 ## Установка
 
@@ -215,6 +227,40 @@ logger.info(f"Найдено {len(comments)} комментариев таймл
 for comment in comments:
     logger.info(f"Комментарий ID {comment.id}: {comment.comment} от {comment.author_id}")
 ```        
+
+### Работа с порталом
+
+```python
+from orm_bitrix24.entity import Portal
+portal = Portal(bitrix)
+
+# Получение всех полей сделки
+deal_fields = await portal.deal.fields.get_all()
+
+# Получение всех полей контакта
+contact_fields = await portal.contact.fields.get_all()
+
+# Создание поля сделки
+new_field = await portal.deal.fields.create(
+    field_name="TEST_FIELD",
+    field_title="Тестовое поле",
+    field_type="string",
+    is_required=False
+)
+# получение пользовательских полей сделки в человеческом виде
+custom_fields = await portal.deal.fields.get_custom_fields()
+print(f"Пользовательских полей: {len(custom_fields)}")
+
+for field in custom_fields:
+    print(f"- {field.name}: {field.title} ({field.type})")
+    if field.type == 'enumeration':
+        for value in field.values:
+            print(f'  {value.value} ({value.id})')
+
+# Удаление поля сделки
+await portal.deal.fields.delete("UF_CRM_TEST_FIELD")
+```
+
 ## Требования
 
 - Python 3.12+

@@ -1,12 +1,14 @@
 [project]
 name = "orm-bitrix24"
-version = "0.1.3"
+version = "0.1.4"
 description = "ORM for Bitrix24 REST API"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fast-bitrix24",
     "python-dotenv",
+    "loguru",
+    
 ]
 
 [[tool.uv.index]]

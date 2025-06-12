@@ -71,25 +71,6 @@ async def test_deal_get(test_deal):
     assert retrieved_deal.title == test_deal.title
     assert retrieved_deal.opportunity == test_deal.opportunity
 
-@pytest.mark.asyncio
-async def test_deal_create_timeline_comment(bitrix_client, test_deal):
-    """Тест создания комментария в таймлайне"""
-    # Создаем комментарий в таймлайне
-    Deal.get_manager(bitrix_client)
-    retrieved_deal = await Deal.objects.get_by_id(test_deal.id)
-
-    comment = await retrieved_deal.timeline.comments.create(comment="Тестовый комментарий")
-    print(f'comment: {comment.comment}')
-    assert comment.comment == "Тестовый комментарий"
-    # pytest.skip("Необходимо установить переменную окружения WEBHOOK") 
-
-@pytest.mark.asyncio
-async def test_deal_get_timeline_comment(test_deal):
-    """Тест получения комментария в таймлайне"""
-    # Получаем комментарий в таймлайне
-    comments = await test_deal.timeline.comments.get_all()
-    print(f'comments: {comments}')
-    assert comments[0].comment == "Тестовый комментарий"
 
 @pytest.mark.asyncio
 async def test_deal_update(test_deal):
@@ -142,19 +123,42 @@ async def test_deal_get_activity(test_deal):
     print(f'activities: {activities}')
     assert activities[0].subject == "Коммерческое предложение из ORM просто ответьте"
 
-@pytest.mark.asyncio
-async def test_deal_activity(test_deal):
-    """Тест работы с активностями"""
-    # Получаем активнсоти сделки
-    activities = await test_deal.activity.get_all()
-    print(f'activities: {activities}')
+# @pytest.mark.asyncio
+# async def test_deal_activity(test_deal):
+#     """Тест работы с активностями"""
+#     # Получаем активнсоти сделки
+#     activities = await test_deal.activity.get_all()
+#     print(f'activities: {activities}')
+
+# @pytest.mark.asyncio
+# async def test_deal_timeline(test_deal):
+#     """Тест работы с таймлайном"""
+#     # Получаем таймлайн сделки
+#     timeline = await test_deal.timeline.comments.get_all()
+#     print(f'timeline: {timeline}')
 
 @pytest.mark.asyncio
-async def test_deal_timeline(test_deal):
-    """Тест работы с таймлайном"""
-    # Получаем таймлайн сделки
-    timeline = await test_deal.timeline.comments.get_all()
-    print(f'timeline: {timeline}')
+async def test_deal_create_timeline_comment(bitrix_client, test_deal):
+    """Тест создания комментария в таймлайне"""
+    # Создаем комментарий в таймлайне
+    Deal.get_manager(bitrix_client)
+    retrieved_deal = await Deal.objects.get_by_id(test_deal.id)
+
+    comment = await retrieved_deal.timeline.comments.create(comment="Тестовый комментарий")
+    print(f'comment: {comment.comment}')
+    assert comment.comment == "Тестовый комментарий"
+    # pytest.skip("Необходимо установить переменную окружения WEBHOOK") 
+
+@pytest.mark.asyncio
+async def test_deal_get_timeline_comment(test_deal):
+    """Тест получения комментария в таймлайне"""
+    # Получаем комментарий в таймлайне
+    comments = await test_deal.timeline.comments.get_all()
+    print(f'comments: {comments}')
+    assert comments[0].comment == "Тестовый комментарий"
+
+
+
 
 @pytest.mark.asyncio
 async def test_deal_filter(test_deal):

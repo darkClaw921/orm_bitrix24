@@ -8,7 +8,7 @@ from orm_bitrix24.entity import _Deal, Activity, EmailActivity, TextCustomField
 from dotenv import load_dotenv
 
 load_dotenv()
-
+logger.add("activity_contact.log", rotation="10 MB", level="DEBUG", format="{time:YYYY:MM:DD HH:mm:ss}:{level}:{file}:{line}:{function}:{message}")
 
 class Deal(_Deal):
     """Расширенный класс Deal с поддержкой активностей"""
@@ -63,6 +63,8 @@ async def activity_example():
     comments = await deal.contact.timeline.comments.get_all()
     logger.info(f"Найдено {len(comments)} комментариев таймлайна")
     for comment in comments:
+
+
         logger.info(f"Комментарий ID {comment.id}: {comment.comment} от {comment.author_id}")
     
     
