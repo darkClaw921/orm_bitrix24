@@ -188,7 +188,7 @@ class EntityManager(Generic[T]):
         
         result = await self._bitrix.get_all(
             f"{self._entity_class.ENTITY_METHOD}.list",
-            {"filter": filter_params}
+            {"filter": filter_params, 'select':['*', 'UF_*']}
         )
         
         return [self._entity_class(self._bitrix, item) for item in result]
